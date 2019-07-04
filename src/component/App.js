@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import Header from './Header'
 import Book from './Book'
-import { Container, Row, Button, ButtonToolbar } from 'react-bootstrap'
+import { Container, Row, Button, ButtonToolbar, Col } from 'react-bootstrap'
 import axios from 'axios';
-import UpdateBook from './UpdateBook';
+import UpdateBook from './BookUpdate';
 import AddBook from './AddBook'
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.updateBook = this.updateBook.bind(this)
+    this.searchGBook = this.searchGBook.bind(this)
+    this.searchBooks = this.searchBooks.bind(this)
     this.addBook = this.addBook.bind(this)
+    this.deleteBook = this.deleteBook.bind(this)
 
     this.state = {
       bookList: [], toggle: 'home', selectedBook: {}
@@ -22,8 +25,30 @@ class App extends Component {
     this.setState({ selectedBook: book, toggle: 'edit' })
   }
 
-  addBook() {
-    this.setState({ toggle: 'add' })
+  addBook(book) {
+
+    this.setState({ selectedBook: book, toggle: 'addBook' })
+  }
+
+  searchGBook(book) {
+    this.setState({ toggle: 'searchGBook' })
+  }
+
+  searchBooks(input) {
+    axios.get('http://localhost:8080/book/findByTitle/' + input)
+      .then((response) => {
+
+        this.setState({ bookList: response.data })
+      })
+
+  }
+
+  deleteBook(input) {
+    axios.delete("http://localhost:8080/book/deleteBook/" + input)
+      .then((response) => {
+        this.setState({ toggle: 'Delete' })
+      })
+
   }
 
   componentWillMount() {
@@ -32,34 +57,29 @@ class App extends Component {
         this.setState({ bookList: response.data })
       })
   }
+
+
   render() {
     var that = this
     var divStyle = {
-      "margin-left": '80%',
+      "marginLeft": '80%',
+      "margin-top": '10px'
     };
 
     var divStyleForList = {
-      "margin-top": '50px'
+      "margin-top": '20px'
 
     };
-    // let r = Object.keys(this.state.bookList).length > 0 && this.state.bookList.items.map(function (book) {
-    //   return (
-    //     <Book book={book} />
-    //   )
 
-    // });
+    let books = this.state.bookList.length > 0 && this.state.bookList.map((book) => {
 
-    let r = this.state.bookList.length > 0 && this.state.bookList.map(function (bookArray) {
-
-      return bookArray.items.map((book) => {
-        return (
+      return (
+        <Col sm={4}>
           <div style={divStyleForList}>
-            <Book book={book} updateBook={that.updateBook} />
+            <Book book={book} updateBook={that.updateBook} addBook={this.addBook} deleteBook={this.deleteBook} navigator='edit' />
           </div>
-
-        )
-      })
-
+        </Col>
+      )
 
     });
 
@@ -67,10 +87,10 @@ class App extends Component {
       case 'home':
         return (
           <div>
-            <Header />
+            <Header searchBooks={this.searchBooks} />
             <div style={divStyle}>
               <ButtonToolbar>
-                <Button variant="outline-success" onClick={this.addBook} >
+                <Button variant="outline-success" onClick={this.searchGBook} >
                   Add Book From Google Books
                 </Button>
               </ButtonToolbar>
@@ -78,7 +98,7 @@ class App extends Component {
             <Container style={divStyleForList}>
 
               <Row >
-                {r}
+                {books}
               </Row>
             </Container>
           </div>
@@ -87,18 +107,29 @@ class App extends Component {
       case 'edit':
         return (
           <div>
-            <Header />
-            <UpdateBook selectedBook={this.state.selectedBook} />
+            <Header searchBooks={this.searchBooks} />
+            <UpdateBook selectedBook={this.state.selectedBook} navigator='edit' />
           </div>
         )
         break;
-      case 'add':
+      case 'searchGBook':
         return (
           <div>
-            <Header />
-            <AddBook />
+            <Header searchBooks={this.searchBooks} />
+            <AddBook addBook={this.addBook} />
           </div>
         )
+        break;
+      case 'addBook':
+        return (
+          <div>
+            <Header searchBooks={this.searchBooks} />
+            <UpdateBook selectedBook={this.state.selectedBook} navigator='add' />
+          </div>
+        )
+        break;
+      case 'Delete':
+        window.location.reload()
         break;
 
     }

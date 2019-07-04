@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Media, Button, ButtonToolbar } from 'react-bootstrap'
+import { Container, Row, Col, Media, Button, ButtonToolbar, Card, InputGroup, FormControl } from 'react-bootstrap'
 import img from './book.jpeg'
 import axios from 'axios';
 
@@ -9,59 +9,61 @@ class Book extends React.Component {
     super(props)
     this.updateBook = this.updateBook.bind(this)
     this.addBook = this.addBook.bind(this)
+    this.deleteBook = this.deleteBook.bind(this)
+    this.state = { selectedBook: {}, bookDetails: {} }
 
   }
+
+
 
   updateBook() {
     this.props.updateBook(this.props.book)
   }
 
   addBook() {
+    this.props.addBook(this.props.book)
+  }
 
-    let selectedBook = {}
-    selectedBook.id = this.props.book.volumeInfo.id
-    selectedBook.title = this.props.book.volumeInfo.title
-    selectedBook.authors = this.props.book.volumeInfo.authors
-    selectedBook.price = this.props.book.volumeInfo.price
-    selectedBook.description = this.props.book.volumeInfo.id
-    selectedBook.quantity = this.props.book.volumeInfo.quantity
-    selectedBook.imageLinks = this.props.book.volumeInfo.imageLinks
-  
-
-    axios.post('http://localhost:8080/book/createBook', selectedBook)
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+  deleteBook() {
+    this.props.deleteBook(this.props.book.id)
   }
 
   render() {
+    
     return (
-      <Media>
-        <img
-          width={200}
-          height={200}
-          className="mr-3"
-          src={this.props.book.volumeInfo.imageLinks != null && this.props.book.volumeInfo.imageLinks.thumbnail}
-          alt="Generic placeholder"
-        />
-        <Media.Body>
-          <h5>{this.props.book.volumeInfo.title}</h5>
-          <p>
-            {this.props.book.volumeInfo.authors != null && this.props.book.volumeInfo.authors[0]}
-          </p>
-          <p>{this.props.book.volumeInfo.price}</p>
-          <p>{this.props.book.volumeInfo.quantity}</p>
-          <p>{this.props.book.volumeInfo.description}</p>
-          <Button variant="outline-primary" onClick={this.updateBook}>Edit</Button>
+      <Card style={{ width: '18rem' }}>
+        <Card.Img variant="top" src={this.props.book.imageLinks != null ? this.props.book.imageLinks.thumbnail : img} />
+        <Card.Body>
+          <Card.Title>{this.props.book.title}</Card.Title>
+          <Card.Subtitle className="mb-2 text-muted">{this.props.book.authors != null && this.props.book.authors.join(',')}</Card.Subtitle>
+          <Card.Title> <InputGroup className="mb-3">
+            <InputGroup.Prepend>
+              <InputGroup.Text id="price">
+                Price
+      </InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl id="basic-url" aria-describedby="basic-addon3" readOnly value={this.props.book.price} />
+          </InputGroup></Card.Title>
+          <Card.Title> <InputGroup className="mb-3">
+            <InputGroup.Prepend>
+              <InputGroup.Text id="price">
+                Quantity
+      </InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl id="basic-url" aria-describedby="basic-addon3" readOnly value={this.props.book.quantity} />
+          </InputGroup></Card.Title>
+          <Card.Text>
+            {this.props.book.description != null && this.props.book.description.substr(0, 50)}
+          </Card.Text>
+          {this.props.navigator == 'edit' && <Button variant="outline-primary" onClick={this.updateBook}>Edit</Button>}
           &nbsp;  &nbsp;  &nbsp;
-          <Button variant="outline-danger">Delete</Button>
+           {this.props.navigator == 'edit' && <Button variant="outline-danger" onClick={this.deleteBook}>Delete</Button>}
           &nbsp;  &nbsp;  &nbsp;
-          <Button variant="success" onClick = {this.addBook}>Add</Button>
-        </Media.Body>
-      </Media>
+          {this.props.navigator == 'add' && <Button variant="success" onClick={this.addBook}>Add Book</Button>}
+        </Card.Body>
+      </Card>
+
+
     )
   }
 }
