@@ -14,7 +14,7 @@ class AddBook extends React.Component {
 
     findBookFromGAPI() {
         let input = document.getElementById("searchTextGBook").value
-        axios.get('http://localhost:8080/book/gBooks/' + input)
+        axios.get('http://localhost:8080/v1/book/gBooks/' + input)
             .then((response) => {
                 this.setState({ googleBookList: response.data[0].items })
             })

@@ -22,7 +22,7 @@ class UpdateBook extends React.Component {
     selectedBook.imageLinks = this.state.selectedBook.imageLinks
 
     if(this.state.selectedBook.id !=null){
-      axios.put('http://localhost:8080/book/updateBook/'+this.state.selectedBook.id, selectedBook)
+      axios.put('http://localhost:8080/v1/book/updateBook/'+this.state.selectedBook.id, selectedBook)
       .then(function (response) {
         alert("Book Details Updated SuccessFully!")
       })
@@ -30,7 +30,7 @@ class UpdateBook extends React.Component {
         console.log(error);
       });
     }else{
-      axios.post('http://localhost:8080/book/createBook', selectedBook)
+      axios.post('http://localhost:8080/v1/book/createBook', selectedBook)
       .then(function (response) {
         alert("Book Added to Your Repository!")
       })
@@ -49,7 +49,7 @@ class UpdateBook extends React.Component {
     };
 
     return (
-      <div style={divStyle}>
+      <div style={divStyle} id="updatePageId">
         {this.props.navigator == 'edit' ?
                  <h1>
                   <Badge variant="secondary">Edit Book </Badge>

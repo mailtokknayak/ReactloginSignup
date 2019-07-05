@@ -35,7 +35,7 @@ class App extends Component {
   }
 
   searchBooks(input) {
-    axios.get('http://localhost:8080/book/findByTitle/' + input)
+    axios.get('http://localhost:8080/v1/book/findByTitle/' + input)
       .then((response) => {
 
         this.setState({ bookList: response.data })
@@ -44,7 +44,7 @@ class App extends Component {
   }
 
   deleteBook(input) {
-    axios.delete("http://localhost:8080/book/deleteBook/" + input)
+    axios.delete("http://localhost:8080/v1/book/deleteBook/" + input)
       .then((response) => {
         this.setState({ toggle: 'Delete' })
       })
@@ -52,7 +52,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    axios.get('http://localhost:8080/book/allBooks')
+    axios.get('http://localhost:8080/v1/book/allBooks')
       .then((response) => {
         this.setState({ bookList: response.data })
       })
@@ -86,7 +86,7 @@ class App extends Component {
     switch (this.state.toggle) {
       case 'home':
         return (
-          <div>
+          <div id = "mainDiv">
             <Header searchBooks={this.searchBooks} />
             <div style={divStyle}>
               <ButtonToolbar>

@@ -17,8 +17,6 @@ class Header extends React.Component {
   }
 
   render() {
-
-
     return (
       <div>
         <Navbar bg="dark" variant="dark">
