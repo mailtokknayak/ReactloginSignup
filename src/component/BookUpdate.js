@@ -1,6 +1,6 @@
 import React from 'react';
 import image from './book.jpeg'
-import { Figure, Row, Col, Container, InputGroup, FormControl, ButtonToolbar, Button ,Jumbotron,Badge} from 'react-bootstrap'
+import { Figure, Row, Col, Container, InputGroup, FormControl, ButtonToolbar, Button, Jumbotron, Badge } from 'react-bootstrap'
 import axios from 'axios';
 
 class UpdateBook extends React.Component {
@@ -8,12 +8,12 @@ class UpdateBook extends React.Component {
     super(props)
     this.updateBookDetails = this.updateBookDetails.bind(this)
     this.state = { selectedBook: this.props.selectedBook }
-   
+
   }
 
   updateBookDetails() {
     var selectedBook = {}
-    selectedBook.id =   this.state.selectedBook.id
+    selectedBook.id = this.state.selectedBook.id
     selectedBook.title = this.state.selectedBook.title
     selectedBook.authors = this.state.selectedBook.authors
     selectedBook.price = this.price.value
@@ -21,25 +21,25 @@ class UpdateBook extends React.Component {
     selectedBook.quantity = this.quantity.value
     selectedBook.imageLinks = this.state.selectedBook.imageLinks
 
-    if(this.state.selectedBook.id !=null){
-      axios.put('http://localhost:8080/v1/book/updateBook/'+this.state.selectedBook.id, selectedBook)
-      .then(function (response) {
-        alert("Book Details Updated SuccessFully!")
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    }else{
+    if (this.state.selectedBook.id != null) {
+      axios.put('http://localhost:8080/v1/book/updateBook/' + this.state.selectedBook.id, selectedBook)
+        .then(function (response) {
+          alert("Book Details Updated SuccessFully!")
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
       axios.post('http://localhost:8080/v1/book/createBook', selectedBook)
-      .then(function (response) {
-        alert("Book Added to Your Repository!")
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+        .then(function (response) {
+          alert("Book Added to Your Repository!")
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
-    
-   
+
+
 
   }
 
@@ -51,13 +51,13 @@ class UpdateBook extends React.Component {
     return (
       <div style={divStyle} id="updatePageId">
         {this.props.navigator == 'edit' ?
-                 <h1>
-                  <Badge variant="secondary">Edit Book </Badge>
-               </h1> :
-                  <h1>
-                  <Badge variant="secondary">Add Book</Badge>
-               </h1> 
-                }
+          <h1>
+            <Badge variant="secondary">Edit Book </Badge>
+          </h1> :
+          <h1>
+            <Badge variant="secondary">Add Book</Badge>
+          </h1>
+        }
         <Container>
 
           <Row >
@@ -65,7 +65,7 @@ class UpdateBook extends React.Component {
               <Figure.Image
                 width={250}
                 height={250}
-                
+
                 src={this.state.selectedBook.imageLinks != null ? this.state.selectedBook.imageLinks.thumbnail : image}
               />
               <Figure.Caption>
@@ -74,20 +74,20 @@ class UpdateBook extends React.Component {
             </Figure>
             </Col>
             <Col>
-            <Jumbotron fluid>
-  <Container>
-  <h2> {this.state.selectedBook.title}</h2>
-              <h3> {this.state.selectedBook.authors != null && this.state.selectedBook.authors[0]}</h3>
-  </Container>
-</Jumbotron>
-             
+              <Jumbotron fluid>
+                <Container>
+                  <h2> {this.state.selectedBook.title}</h2>
+                  <h3> {this.state.selectedBook.authors != null && this.state.selectedBook.authors[0]}</h3>
+                </Container>
+              </Jumbotron>
+
               <InputGroup className="mb-3">
                 <InputGroup.Prepend>
                   <InputGroup.Text id="price">
                     Price
       </InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl id="basic-url" aria-describedby="basic-addon3" type="number"  ref={(value) => this.price = value} /> {this.state.selectedBook.price}
+                <FormControl id="basic-url" aria-describedby="basic-addon3" type="number" ref={(value) => this.price = value} /> {this.state.selectedBook.price}
               </InputGroup>
 
               <InputGroup className="mb-3">
@@ -96,7 +96,7 @@ class UpdateBook extends React.Component {
                     Quantity
       </InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl id="basic-url" aria-describedby="basic-addon3" type="number"  ref={(value) => this.quantity = value}/>{this.state.selectedBook.quantity}
+                <FormControl id="basic-url" aria-describedby="basic-addon3" type="number" ref={(value) => this.quantity = value} />{this.state.selectedBook.quantity}
               </InputGroup>
 
 
